@@ -64,7 +64,7 @@ public class Matching {
             totalHashes[dbSongs]= listOfDbMaps.get(dbSongs).size();
 
         }
-//??????
+
         int[] target = new int[maxCount.size()];
         for (int i = 0; i < target.length; i++) {
             //if (maxCount.get(i) >= 5) {
