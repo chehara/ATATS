@@ -22,9 +22,35 @@ Incoming parameters are:
 Tested using J2SE 5.0 under WinXP.  Requires J2SE 5.0 or
 later due to the use of static import of Math class.
 **********************************************************/
-import static java.lang.Math.*;
 
-public class ForwardDCT01{
+import static java.lang.Math.PI;
+import static java.lang.Math.sqrt;
+
+public class ForwardDCT01 {
+
+
+    static final int precision = 100; // gradations per degree, adjust to suit
+
+    static final int modulus = 360*precision;
+    static final float[] sin = new float[modulus]; // lookup table
+    static {
+        // a static initializer fills the table
+        // in this implementation, units are in degrees
+        for (int i = 0; i<sin.length; i++) {
+            sin[i]=(float)Math.sin((i*Math.PI)/(precision*180));
+        }
+    }
+    // Private function for table lookup
+    private static float sinLookup(int a) {
+        return a>=0 ? sin[a%(modulus)] : -sin[-a%(modulus)];
+    }
+
+    // These are your working functions:
+
+    public static double cosCal(double a) {
+        return sinLookup((int)((a+90f) * precision + 0.5f));
+    }
+
 
     public static void transform(double[] x,
                                  double[] y){
@@ -37,7 +63,7 @@ public class ForwardDCT01{
             //Inner loop iterates on time-series points.
             for(int n=0; n < N; n++){
                 double arg = PI*k*(2.0*n+1)/(2*N);
-                double cosine = cos(arg);
+                double cosine = cosCal(Math.toDegrees(arg));
                 double product = x[n]*cosine;
                 sum += product;
             }//end inner loop
